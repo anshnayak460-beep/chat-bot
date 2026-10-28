@@ -1,0 +1,406 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nova AI Chatbot</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #080d1c;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 850px;
+      height: 88vh;
+      min-height: 500px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid #293451;
+      border-radius: 22px;
+      background: #10182b;
+      box-shadow: 0 0 50px #4425a522;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 20px;
+      border-bottom: 1px solid #293451;
+      background: #121c32;
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      font-size: 25px;
+      background: linear-gradient(135deg, #6557ff, #11c5e9);
+    }
+
+    header h1 {
+      font-size: 20px;
+      margin-bottom: 5px;
+    }
+
+    header p {
+      color: #aab8d2;
+      font-size: 13px;
+    }
+
+    .online {
+      color: #53e6a3;
+    }
+
+    #chat {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      scroll-behavior: smooth;
+    }
+
+    .message {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      max-width: 90%;
+    }
+
+    .message.user {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      border-radius: 11px;
+      background: #27365a;
+    }
+
+    .user .avatar {
+      background: #5145cd;
+    }
+
+    .bubble {
+      padding: 13px 16px;
+      border-radius: 4px 16px 16px 16px;
+      background: #1c2942;
+      color: #edf2ff;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    .user .bubble {
+      background: linear-gradient(135deg, #5145cd, #3549a4);
+      border-radius: 16px 4px 16px 16px;
+    }
+
+    .welcome {
+      text-align: center;
+      margin: 12px 0;
+      color: #bdc8df;
+      line-height: 1.8;
+    }
+
+    .welcome h2 {
+      color: white;
+      margin-bottom: 8px;
+      font-size: 25px;
+    }
+
+    .quick {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 9px;
+      margin-top: 15px;
+    }
+
+    .quick button {
+      background: #182440;
+      color: #dce5ff;
+      border: 1px solid #354568;
+      padding: 10px 13px;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    .quick button:hover {
+      border-color: #8c7bff;
+      background: #263459;
+    }
+
+    .typing {
+      color: #aab8d2;
+      font-size: 13px;
+      padding: 0 24px 12px;
+    }
+
+    .input-area {
+      padding: 16px;
+      border-top: 1px solid #293451;
+      background: #111a2e;
+    }
+
+    form {
+      display: flex;
+      gap: 10px;
+      max-width: 100%;
+    }
+
+    input {
+      flex: 1;
+      min-width: 0;
+      padding: 15px;
+      border-radius: 13px;
+      outline: none;
+      border: 1px solid #354568;
+      background: #0b1325;
+      color: white;
+      font-size: 15px;
+    }
+
+    input:focus {
+      border-color: #7b70ff;
+    }
+
+    #send {
+      border: none;
+      padding: 0 20px;
+      border-radius: 13px;
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      background: linear-gradient(135deg, #6557ff, #278bdb);
+    }
+
+    #send:disabled {
+      opacity: 0.5;
+      cursor: wait;
+    }
+
+    .footer {
+      color: #7786a5;
+      text-align: center;
+      font-size: 11px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 0;
+      }
+
+      .app {
+        height: 100vh;
+        min-height: 0;
+        border-radius: 0;
+      }
+
+      #chat {
+        padding: 17px 12px;
+      }
+
+      .message {
+        max-width: 96%;
+      }
+
+      header {
+        padding: 15px;
+      }
+
+      .bubble {
+        padding: 11px;
+        font-size: 14px;
+      }
+
+      .input-area {
+        padding: 12px;
+      }
+
+      #send {
+        padding: 0 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+    <header>
+      <div class="logo">✦</div>
+      <div>
+        <h1>Nova AI</h1>
+        <p><span class="online">●</span> Your smart chat assistant</p>
+      </div>
+    </header>
+
+    <section id="chat" aria-live="polite">
+      <div class="welcome">
+        <h2>Hey there! 👋</h2>
+        Welcome to Nova AI.<br>
+        Ask me anything or try a quick question below.
+
+        <div class="quick">
+          <button type="button" data-question="What is Artificial Intelligence?">🤖 What is AI?</button>
+          <button type="button" data-question="Teach me Python basics">🐍 Learn Python</button>
+          <button type="button" data-question="How do I create a website?">💻 Build a website</button>
+        </div>
+      </div>
+    </section>
+
+    <div id="typing" class="typing" hidden>Nova AI is typing...</div>
+
+    <div class="input-area">
+      <form id="form">
+        <input
+          id="prompt"
+          type="text"
+          placeholder="Message Nova AI..."
+          autocomplete="off"
+          maxlength="2000"
+          aria-label="Your message"
+          required
+        >
+        <button id="send" type="submit">Send ➤</button>
+      </form>
+      <p class="footer">
+        Nova AI Demo · Verify important information
+      </p>
+    </div>
+  </main>
+
+  <script>
+    const chat = document.getElementById("chat");
+    const form = document.getElementById("form");
+    const input = document.getElementById("prompt");
+    const sendButton = document.getElementById("send");
+    const typing = document.getElementById("typing");
+
+    function addMessage(text, sender) {
+      const row = document.createElement("div");
+      row.className = "message " + sender;
+
+      const avatar = document.createElement("div");
+      avatar.className = "avatar";
+      avatar.textContent = sender === "user" ? "👤" : "✦";
+
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+
+      // Treat messages as text, not HTML.
+      bubble.textContent = text;
+
+      row.append(avatar, bubble);
+      chat.appendChild(row);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function getReply(message) {
+      const text = message.toLowerCase().trim();
+
+      if (/^(hi|hello|hey|hii|namaste|नमस्ते)\b/.test(text)) {
+        return "Hello! 👋 Main Nova AI hoon. Batao, main tumhari kya help kar sakta hoon?";
+      }
+
+      if (text.includes("your name") || text.includes("tumhara naam")) {
+        return "Mera naam Nova AI hai! ✨";
+      }
+
+      if (text.includes("artificial intelligence") || text === "what is ai" || text.includes("ai kya hai")) {
+        return "Artificial Intelligence (AI) ek technology hai jo computers ko language samajhne, patterns identify karne aur problems solve karne jaise kaam karne mein madad karti hai.";
+      }
+
+      if (text.includes("python")) {
+        return "Python ek beginner-friendly programming language hai. Example:\n\nprint('Hello World')\n\nYe code Hello World print karega. Tum variables, data types, if-else aur loops se shuru kar sakte ho.";
+      }
+
+      if (text.includes("website") || text.includes("html")) {
+        return "Website banane ke liye HTML se structure, CSS se design aur JavaScript se interactivity add karo. GitHub Pages par static HTML, CSS aur JavaScript website free host kar sakte ho.";
+      }
+
+      if (text.includes("github")) {
+        return "GitHub par apni repository kholo, Add file se index.html banao aur code commit karo. Phir Settings → Pages → Deploy from a branch → main → /(root) select karke Save karo.";
+      }
+
+      if (text.includes("thank")) {
+        return "You're welcome! 😊 Aur kuch poochna ho toh batao.";
+      }
+
+      if (text.includes("time") || text.includes("date")) {
+        return "Aaj ki date: " + new Date().toLocaleDateString("en-IN") +
+          "\nLocal time: " + new Date().toLocaleTimeString("en-IN");
+      }
+
+      return "Tumne poocha: \"" + message + "\"\n\nMain abhi ek demo chatbot hoon, isliye mere paas har sawaal ka intelligent answer nahi hai. Real AI answers ke liye ise kisi AI API ke backend se connect karna hoga.";
+    }
+
+    let busy = false;
+
+    function askQuestion(question) {
+      if (busy || !question.trim()) return;
+
+      busy = true;
+      sendButton.disabled = true;
+
+      document.querySelector(".welcome")?.remove();
+      addMessage(question, "user");
+      typing.hidden = false;
+      chat.scrollTop = chat.scrollHeight;
+
+      // Simulated response delay for the demo.
+      setTimeout(() => {
+        typing.hidden = true;
+        addMessage(getReply(question), "bot");
+        busy = false;
+        sendButton.disabled = false;
+        input.focus();
+      }, 650);
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const question = input.value.trim();
+      if (!question || busy) return;
+
+      input.value = "";
+      askQuestion(question);
+    });
+
+    document.querySelectorAll("[data-question]").forEach((button) => {
+      button.addEventListener("click", () => {
+        askQuestion(button.dataset.question);
+      });
+    });
+  </script>
+</body>
+</html>
