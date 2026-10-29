@@ -1,8 +1,13 @@
-<!DOCTYPE html><html lang="hi">
+
+<!DOCTYPE html>
+<html lang="hi">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#080d18">  <title>Nova AI - Your AI Assistant</title>  <style>
+  <meta name="theme-color" content="#080d18">
+  <title>Nova AI - Your AI Assistant</title>
+
+  <style>
     * {
       box-sizing: border-box;
       margin: 0;
@@ -17,11 +22,11 @@
       --text: #f4f7ff;
       --muted: #9ba9c0;
       --accent: #7c5cff;
-      --accent2: #4c8dff;
     }
 
     body {
       min-height: 100vh;
+      min-height: 100dvh;
       background: var(--bg);
       color: var(--text);
       font-family: Arial, Helvetica, sans-serif;
@@ -35,6 +40,11 @@
 
     button {
       cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
 
     .app {
@@ -195,7 +205,6 @@
         opacity: 0;
         transform: translateY(5px);
       }
-
       to {
         opacity: 1;
         transform: translateY(0);
@@ -350,11 +359,6 @@
       filter: brightness(1.15);
     }
 
-    .send:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
     .footer-note {
       max-width: 760px;
       margin: 9px auto 0;
@@ -410,128 +414,109 @@
         grid-template-columns: 1fr;
       }
     }
-  </style></head><body>
-  <main class="app"><header class="header">
-  <div class="brand">
-    <div class="logo">✦</div>
+  </style>
+</head>
 
-    <div>
-      <h1>Nova AI</h1>
-      <p>Your intelligent assistant</p>
+<body>
+  <main class="app">
+
+    <header class="header">
+      <div class="brand">
+        <div class="logo">✦</div>
+        <div>
+          <h1>Nova AI</h1>
+          <p>Your intelligent assistant</p>
+        </div>
+      </div>
+
+      <button type="button" class="new-chat" id="newChat">
+        ＋ New Chat
+      </button>
+    </header>
+
+    <section class="chat" id="chat" aria-live="polite">
+      <div class="welcome" id="welcome">
+        <div class="welcome-icon">✦</div>
+
+        <h2>Hello, I'm Nova AI</h2>
+
+        <p>
+          नमस्ते! मैं Nova AI हूँ।<br>
+          मुझसे पढ़ाई, coding, science या किसी भी सामान्य विषय के बारे में पूछो।
+        </p>
+
+        <div class="suggestions">
+          <button type="button" class="suggestion"
+            data-q="मुझे आसान भाषा में Machine Learning समझाओ।">
+            <span>🧠</span>
+            Machine Learning क्या है?
+          </button>
+
+          <button type="button" class="suggestion"
+            data-q="मुझे HTML और CSS सीखने का आसान तरीका बताओ।">
+            <span>💻</span>
+            Coding सीखें
+          </button>
+
+          <button type="button" class="suggestion"
+            data-q="मुझे भारत के बारे में 10 रोचक तथ्य बताओ।">
+            <span>🌍</span>
+            रोचक जानकारी
+          </button>
+
+          <button type="button" class="suggestion"
+            data-q="मेरे लिए Maths की पढ़ाई का एक आसान टाइमटेबल बनाओ।">
+            <span>📚</span>
+            Study Timetable
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <div class="typing" id="typing" hidden>
+      <div class="avatar">✦</div>
+      <div class="dots">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <span>Nova AI जवाब तैयार कर रहा है...</span>
     </div>
-  </div>
 
-  <button
-    type="button"
-    class="new-chat"
-    id="newChat"
-  >
-    ＋ New Chat
-  </button>
-</header>
+    <section class="composer-area">
+      <form class="form" id="form">
+        <textarea
+          class="prompt"
+          id="prompt"
+          placeholder="Nova AI से कुछ भी पूछें..."
+          rows="1"
+          maxlength="4000"
+          aria-label="अपना सवाल लिखें"
+          required
+        ></textarea>
 
-<section
-  class="chat"
-  id="chat"
-  aria-live="polite"
-  aria-label="Chat messages"
->
-  <div class="welcome" id="welcome">
-    <div class="welcome-icon">✦</div>
+        <button
+          class="send"
+          id="send"
+          type="submit"
+          aria-label="Send message"
+        >
+          ↑
+        </button>
+      </form>
 
-    <h2>Hello, I'm Nova AI</h2>
+      <p class="footer-note">
+        Nova AI गलतियाँ कर सकता है। ज़रूरी जानकारी को दूसरे भरोसेमंद स्रोत से भी जाँचें।
+        <br>Powered by Groq AI · Cloudflare Workers
+      </p>
+    </section>
 
-    <p>
-      नमस्ते! मैं Nova AI हूँ।<br>
-      मुझसे पढ़ाई, coding, science या किसी भी सामान्य विषय के बारे में पूछो।
-    </p>
+  </main>
 
-    <div class="suggestions">
-      <button
-        type="button"
-        class="suggestion"
-        data-q="मुझे आसान भाषा में Machine Learning समझाओ।"
-      >
-        <span>🧠</span>
-        Machine Learning क्या है?
-      </button>
-
-      <button
-        type="button"
-        class="suggestion"
-        data-q="मुझे HTML और CSS सीखने का आसान तरीका बताओ।"
-      >
-        <span>💻</span>
-        Coding सीखें
-      </button>
-
-      <button
-        type="button"
-        class="suggestion"
-        data-q="मुझे भारत के बारे में 10 रोचक तथ्य बताओ।"
-      >
-        <span>🌍</span>
-        रोचक जानकारी
-      </button>
-
-      <button
-        type="button"
-        class="suggestion"
-        data-q="मेरे लिए Maths की पढ़ाई का एक आसान टाइमटेबल बनाओ।"
-      >
-        <span>📚</span>
-        Study Timetable
-      </button>
-    </div>
-  </div>
-</section>
-
-<div class="typing" id="typing" hidden>
-  <div class="avatar">✦</div>
-
-  <div class="dots" aria-label="Nova AI जवाब लिख रहा है">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-
-  <span>Nova AI जवाब तैयार कर रहा है...</span>
-</div>
-
-<section class="composer-area">
-  <form class="form" id="form">
-    <textarea
-      class="prompt"
-      id="prompt"
-      placeholder="Nova AI से कुछ भी पूछें..."
-      rows="1"
-      aria-label="अपना सवाल लिखें"
-      required
-    ></textarea>
-
-    <button
-      class="send"
-      id="send"
-      type="submit"
-      aria-label="Send message"
-    >
-      ↑
-    </button>
-  </form>
-
-  <p class="footer-note">
-    Nova AI गलतियाँ कर सकता है। ज़रूरी जानकारी को दूसरे भरोसेमंद स्रोत से भी जाँचें।
-  </p>
-</section>
-
-  </main>  <script>
-    /*
-      IMPORTANT:
-      नीचे PASTE_YOUR_WORKER_URL_HERE की जगह
-      अपने deployed Cloudflare Worker का असली URL डालें।
-    */
-
-    const API_URL = "PASTE_YOUR_WORKER_URL_HERE";
+  <script>
+    // Your deployed Cloudflare Worker URL
+    const API_URL =
+      "https://ancient-haze-07d0.anshnayak460.workers.dev/";
 
     const chat = document.getElementById("chat");
     const form = document.getElementById("form");
@@ -557,13 +542,14 @@
       const bubble = document.createElement("div");
       bubble.className = "bubble";
 
-      // textContent का उपयोग HTML को सुरक्षित रखने के लिए किया गया है।
+      // Safe rendering: never execute AI text as HTML.
       bubble.textContent = String(text);
 
       row.append(avatar, bubble);
       chat.appendChild(row);
-
       chat.scrollTop = chat.scrollHeight;
+
+      return bubble;
     }
 
     function showWelcome() {
@@ -586,20 +572,24 @@
       suggestions.className = "suggestions";
 
       const prompts = [
-        ["🧠", "Machine Learning क्या है?", "मुझे आसान भाषा में Machine Learning समझाओ।"],
-        ["💻", "Coding सीखें", "मुझे HTML और CSS सीखने का आसान तरीका बताओ।"],
-        ["🌍", "रोचक जानकारी", "मुझे भारत के बारे में 10 रोचक तथ्य बताओ।"],
-        ["📚", "Study Timetable", "मेरे लिए Maths की पढ़ाई का एक आसान टाइमटेबल बनाओ।"]
+        ["🧠", "Machine Learning क्या है?",
+          "मुझे आसान भाषा में Machine Learning समझाओ।"],
+        ["💻", "Coding सीखें",
+          "मुझे HTML और CSS सीखने का आसान तरीका बताओ।"],
+        ["🌍", "रोचक जानकारी",
+          "मुझे भारत के बारे में 10 रोचक तथ्य बताओ।"],
+        ["📚", "Study Timetable",
+          "मेरे लिए Maths की पढ़ाई का एक आसान टाइमटेबल बनाओ।"]
       ];
 
-      prompts.forEach(([iconText, title, question]) => {
+      prompts.forEach(([emojiText, title, question]) => {
         const button = document.createElement("button");
         button.type = "button";
         button.className = "suggestion";
         button.dataset.q = question;
 
         const emoji = document.createElement("span");
-        emoji.textContent = iconText;
+        emoji.textContent = emojiText;
 
         button.append(
           emoji,
@@ -624,12 +614,12 @@
 
       if (busy || !question) return;
 
+      // Validate the configured Cloudflare Worker URL.
       if (
-        API_URL === "PASTE_YOUR_WORKER_URL_HERE" |"https://ancient-haze-07d0.anshnayak460.workers.dev/?utm_source=chatgpt.com"|
-        !/^https:\/\/.+/.test(API_URL)
+        !/^https:\/\/[a-z0-9.-]+\.workers\.dev\/?$/i.test(API_URL)
       ) {
         addMessage(
-          "Configuration error: पहले अपना deployed Cloudflare Worker URL सेट करो। अभी AI सर्वर कनेक्ट नहीं है।",
+          "Configuration error: Apna deployed Cloudflare Worker URL check karo.",
           "assistant"
         );
         return;
@@ -650,38 +640,24 @@
           role: "user",
           content: question
         }
-      ].slice(-20);
+      ].slice(-12);
 
       try {
         const response = await fetch(API_URL, {
           method: "POST",
-
           headers: {
             "Content-Type": "application/json"
           },
-
           body: JSON.stringify({
             messages: nextHistory
           })
         });
 
-        const raw = await response.text();
-
-        let data;
-
-        try {
-          data = JSON.parse(raw);
-        } catch {
-          throw new Error(
-            "Worker ने valid JSON नहीं भेजा। Backend response जाँचें।"
-          );
-        }
+        const data = await response.json().catch(() => ({}));
 
         if (!response.ok) {
           throw new Error(
-            data.error ||
-            data.message ||
-            "Server error: " + response.status
+            data.error || "Server error: " + response.status
           );
         }
 
@@ -689,9 +665,7 @@
           typeof data.reply !== "string" ||
           !data.reply.trim()
         ) {
-          throw new Error(
-            "AI का reply नहीं मिला। Worker को { reply: '...' } format में जवाब देना चाहिए।"
-          );
+          throw new Error("AI ka valid reply nahi mila.");
         }
 
         history = [
@@ -700,7 +674,7 @@
             role: "assistant",
             content: data.reply
           }
-        ].slice(-20);
+        ].slice(-12);
 
         addMessage(data.reply, "assistant");
 
@@ -711,13 +685,13 @@
 
         if (error instanceof TypeError) {
           message =
-            "सर्वर से connection नहीं हो पाया। Worker URL, internet और CORS settings जाँचें।";
+            "Server connection nahi ho paya. Worker URL, CORS aur internet check karo.";
         }
 
         addMessage(
-          "Nova AI से जवाब नहीं मिला।\n\n" +
+          "Nova AI se jawab nahi mila.\n\n" +
           message +
-          "\n\nCloudflare Worker और API configuration जाँचें।",
+          "\n\nCloudflare Worker aur Groq API configuration check karo.",
           "assistant"
         );
 
@@ -733,6 +707,7 @@
       }
     }
 
+    // Send message
     form.addEventListener("submit", function(event) {
       event.preventDefault();
 
@@ -746,7 +721,7 @@
       askAI(question);
     });
 
-    // Enter से संदेश भेजें; Shift + Enter से नई लाइन बनाएँ।
+    // Enter sends; Shift + Enter creates a new line.
     promptInput.addEventListener("keydown", function(event) {
       if (
         event.key === "Enter" &&
@@ -758,15 +733,14 @@
       }
     });
 
-    // Text लिखने पर textarea की ऊँचाई बढ़ाएँ।
+    // Automatically resize the text box.
     promptInput.addEventListener("input", function() {
       promptInput.style.height = "auto";
-
       promptInput.style.height =
         Math.min(promptInput.scrollHeight, 150) + "px";
     });
 
-    // Quick prompt buttons.
+    // Quick prompts
     document.addEventListener("click", function(event) {
       const button = event.target.closest("[data-q]");
 
@@ -775,7 +749,7 @@
       askAI(button.dataset.q);
     });
 
-    // Start a fresh conversation.
+    // Start a new conversation.
     newChatButton.addEventListener("click", function() {
       if (busy) return;
 
@@ -788,5 +762,6 @@
       promptInput.style.height = "auto";
       promptInput.focus();
     });
-  </script></body>
-  </html>
+  </script>
+</body>
+</html>
