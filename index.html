@@ -1,260 +1,544 @@
-
-<!DOCTYPE html>
-<html lang="hi">
+<!DOCTYPE html><html lang="hi">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#080d1c">
-  <title>Nova AI Chatbot</title>
+  <meta name="theme-color" content="#080d18">  <title>Nova AI - Your AI Assistant</title>  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  <style>
-    * { box-sizing: border-box; }
+    :root {
+      --bg: #080d18;
+      --panel: #101827;
+      --panel2: #172236;
+      --border: #27344a;
+      --text: #f4f7ff;
+      --muted: #9ba9c0;
+      --accent: #7c5cff;
+      --accent2: #4c8dff;
+    }
 
     body {
-      margin: 0;
-      padding: 15px;
       min-height: 100vh;
-      display: grid;
-      place-items: center;
-      background: #080d1c;
-      color: #f5f7ff;
-      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      display: flex;
+      justify-content: center;
+    }
+
+    button, textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
     }
 
     .app {
       width: 100%;
-      max-width: 850px;
-      height: 90vh;
-      min-height: 480px;
+      max-width: 900px;
+      height: 100vh;
+      height: 100dvh;
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      background: #10182b;
-      border: 1px solid #293451;
-      border-radius: 22px;
-      box-shadow: 0 15px 60px #0005;
+      background:
+        radial-gradient(
+          circle at 50% -15%,
+          rgba(124, 92, 255, 0.16),
+          transparent 45%
+        ),
+        var(--bg);
     }
 
-    header {
-      padding: 17px;
+    /* Header */
+
+    .header {
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      padding: 15px 18px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(8, 13, 24, 0.95);
       gap: 12px;
-      border-bottom: 1px solid #293451;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-width: 0;
     }
 
     .logo {
-      width: 46px;
-      height: 46px;
+      width: 43px;
+      height: 43px;
       flex-shrink: 0;
       display: grid;
       place-items: center;
       border-radius: 14px;
+      background: linear-gradient(135deg, #8965ff, #358dff);
       font-size: 25px;
-      background: linear-gradient(135deg, #7657ff, #10c7e8);
+      box-shadow: 0 4px 22px rgba(106, 92, 255, 0.25);
     }
 
-    .brand { flex: 1; }
-    h1 { font-size: 19px; margin: 0 0 5px; }
-    .status { color: #6ee7b7; font-size: 12px; }
-
-    button { font: inherit; cursor: pointer; }
-
-    .new-chat, .quick button {
-      padding: 10px 12px;
-      color: #e3e8ff;
-      background: #1a2540;
-      border: 1px solid #354568;
-      border-radius: 11px;
+    .brand h1 {
+      font-size: 19px;
+      letter-spacing: 0.3px;
     }
 
-    #chat {
+    .brand p {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .new-chat {
+      padding: 10px 13px;
+      color: var(--text);
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .new-chat:hover {
+      background: #24334d;
+    }
+
+    /* Chat area */
+
+    .chat {
       flex: 1;
       overflow-y: auto;
-      padding: 22px;
-      display: flex;
-      flex-direction: column;
-      gap: 17px;
+      padding: 22px 17px;
+      scroll-behavior: smooth;
     }
 
     .welcome {
-      margin: auto 0;
+      max-width: 520px;
+      margin: 50px auto 25px;
       text-align: center;
-      color: #afbdd7;
-      line-height: 1.8;
     }
 
-    .welcome h2 { color: white; font-size: 27px; }
-
-    .quick {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 18px;
+    .welcome-icon {
+      width: 75px;
+      height: 75px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 20px;
+      border-radius: 25px;
+      background: linear-gradient(135deg, #8061ff, #348bff);
+      font-size: 40px;
+      box-shadow: 0 8px 35px rgba(99, 102, 241, 0.25);
     }
 
-    .quick button:hover, .new-chat:hover {
-      border-color: #8275ff;
+    .welcome h2 {
+      font-size: clamp(25px, 5vw, 34px);
+      margin-bottom: 12px;
     }
+
+    .welcome p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .suggestions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 27px;
+      text-align: left;
+    }
+
+    .suggestion {
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(16, 24, 39, 0.8);
+      color: var(--text);
+      text-align: left;
+      font-size: 13px;
+      line-height: 1.5;
+      transition: 0.2s;
+    }
+
+    .suggestion:hover {
+      border-color: var(--accent);
+      background: #17213a;
+    }
+
+    .suggestion span {
+      display: block;
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    /* Messages */
 
     .message {
-      max-width: 92%;
       display: flex;
       align-items: flex-start;
-      gap: 9px;
+      gap: 10px;
+      margin: 20px auto;
+      max-width: 760px;
+      animation: appear 0.2s ease;
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .message.user {
-      align-self: flex-end;
       flex-direction: row-reverse;
     }
 
     .avatar {
-      width: 32px;
-      height: 32px;
+      width: 34px;
+      height: 34px;
       flex-shrink: 0;
       display: grid;
       place-items: center;
-      border-radius: 10px;
-      background: #293858;
+      border-radius: 12px;
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      font-size: 17px;
     }
 
-    .user .avatar { background: #5546ca; }
+    .message.bot .avatar {
+      background: linear-gradient(135deg, #7657ff, #388bff);
+      border: none;
+    }
 
     .bubble {
-      padding: 12px 15px;
-      border-radius: 4px 15px 15px;
-      background: #1b2942;
-      line-height: 1.65;
-      white-space: pre-wrap;
+      max-width: calc(100% - 45px);
+      padding: 13px 15px;
+      border: 1px solid var(--border);
+      border-radius: 5px 16px 16px 16px;
+      background: var(--panel);
+      font-size: 14px;
+      line-height: 1.75;
       overflow-wrap: anywhere;
+      white-space: pre-wrap;
     }
 
-    .user .bubble {
-      background: linear-gradient(135deg, #5546ca, #344ca6);
-      border-radius: 15px 4px 15px 15px;
+    .message.user .bubble {
+      background: linear-gradient(135deg, #6547e8, #435edb);
+      border-color: transparent;
+      border-radius: 16px 5px 16px 16px;
     }
 
-    #typing {
-      padding: 0 22px 12px;
-      color: #aab8d2;
+    /* Typing indicator */
+
+    .typing {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 760px;
+      margin: 15px auto;
+      color: var(--muted);
       font-size: 13px;
     }
 
-    .input-area {
-      padding: 14px;
-      border-top: 1px solid #293451;
-      background: #111a2e;
+    .typing[hidden] {
+      display: none;
     }
 
-    form { display: flex; gap: 10px; }
+    .dots {
+      display: flex;
+      gap: 4px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--panel);
+    }
 
-    input {
+    .dots span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #a99aff;
+      animation: bounce 1s infinite alternate;
+    }
+
+    .dots span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .dots span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes bounce {
+      to {
+        opacity: 0.3;
+        transform: translateY(-4px);
+      }
+    }
+
+    /* Input area */
+
+    .composer-area {
+      padding: 12px 16px 10px;
+      border-top: 1px solid var(--border);
+      background: rgba(8, 13, 24, 0.97);
+    }
+
+    .form {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 9px;
+      background: var(--panel);
+      border: 1px solid #35445f;
+      border-radius: 18px;
+      transition: border-color 0.2s;
+    }
+
+    .form:focus-within {
+      border-color: var(--accent);
+    }
+
+    .prompt {
       flex: 1;
       min-width: 0;
-      padding: 14px;
-      color: white;
-      background: #0b1325;
-      border: 1px solid #354568;
-      border-radius: 12px;
+      max-height: 150px;
+      resize: none;
+      padding: 10px 7px;
+      background: transparent;
+      border: none;
       outline: none;
+      color: var(--text);
       font-size: 15px;
+      line-height: 1.5;
     }
 
-    input:focus { border-color: #8275ff; }
+    .prompt::placeholder {
+      color: #8592a9;
+    }
 
-    #send {
-      padding: 0 18px;
+    .send {
+      width: 43px;
+      height: 43px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      border: none;
+      border-radius: 13px;
       color: white;
-      border: 0;
-      border-radius: 12px;
-      font-weight: bold;
-      background: linear-gradient(135deg, #6557ff, #278bdb);
+      background: linear-gradient(135deg, #8061ff, #438bff);
+      font-size: 21px;
+      transition: 0.2s;
     }
 
-    #send:disabled { opacity: .5; cursor: wait; }
+    .send:hover {
+      filter: brightness(1.15);
+    }
 
-    .note {
-      margin: 10px 0 0;
+    .send:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .footer-note {
+      max-width: 760px;
+      margin: 9px auto 0;
+      color: #74829a;
       text-align: center;
-      color: #7786a5;
       font-size: 11px;
+      line-height: 1.5;
     }
 
-    @media(max-width: 600px) {
-      body { padding: 0; }
-      .app {
-        height: 100vh;
-        height: 100dvh;
-        min-height: 0;
-        border-radius: 0;
+    @media (max-width: 500px) {
+      .header {
+        padding: 12px;
       }
-      header { padding: 12px; }
-      #chat { padding: 13px 9px; }
-      .message { max-width: 97%; }
-      .bubble { padding: 10px; font-size: 14px; }
-      .input-area { padding: 10px; }
-      .new-chat { padding: 8px; font-size: 12px; }
-      #send { padding: 0 13px; }
+
+      .brand h1 {
+        font-size: 17px;
+      }
+
+      .logo {
+        width: 39px;
+        height: 39px;
+      }
+
+      .new-chat {
+        padding: 9px 10px;
+        font-size: 12px;
+      }
+
+      .chat {
+        padding: 15px 12px;
+      }
+
+      .welcome {
+        margin-top: 35px;
+      }
+
+      .suggestions {
+        gap: 8px;
+      }
+
+      .suggestion {
+        padding: 11px;
+        font-size: 12px;
+      }
+
+      .composer-area {
+        padding: 10px 10px 8px;
+      }
     }
-  </style>
-</head>
 
-<body>
-  <main class="app">
-    <header>
-      <div class="logo">✦</div>
-      <div class="brand">
-        <h1>Nova AI</h1>
-        <div class="status">● AI Assistant</div>
-      </div>
-      <button class="new-chat" id="newChat" type="button">
-        + New Chat
-      </button>
-    </header>
+    @media (max-width: 350px) {
+      .suggestions {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style></head><body>
+  <main class="app"><header class="header">
+  <div class="brand">
+    <div class="logo">✦</div>
 
-    <section id="chat" aria-live="polite">
-      <div class="welcome" id="welcome">
-        <h2>Hello! 👋</h2>
-        Main Nova AI hoon. Aaj main tumhari kya help karun?
-        <div class="quick">
-          <button type="button" data-q="AI kya hai?">🤖 AI kya hai?</button>
-          <button type="button" data-q="Mujhe Python sikhao">🐍 Learn Python</button>
-          <button type="button" data-q="Ek website kaise banayein?">💻 Website</button>
-        </div>
-      </div>
-    </section>
-
-    <div id="typing" hidden>Nova AI soch raha hai...</div>
-
-    <div class="input-area">
-      <form id="form">
-        <input
-          id="prompt"
-          maxlength="4000"
-          placeholder="Apna sawaal likho..."
-          autocomplete="off"
-          aria-label="Apna sawaal likho"
-          required
-        >
-        <button id="send" type="submit">Send ➤</button>
-      </form>
-      <p class="note">AI ke answers ko zaroorat ke hisaab se verify karein.</p>
+    <div>
+      <h1>Nova AI</h1>
+      <p>Your intelligent assistant</p>
     </div>
-  </main>
+  </div>
 
-  <script>
-    // IMPORTANT: Apne deployed Cloudflare Worker ka URL yahan daalo.
-    // Example: https://nova-ai-backend.yourname.workers.dev
-    const API_URL =
-      "https://YOUR-WORKER.YOUR-SUBDOMAIN.workers.dev";
+  <button
+    type="button"
+    class="new-chat"
+    id="newChat"
+  >
+    ＋ New Chat
+  </button>
+</header>
+
+<section
+  class="chat"
+  id="chat"
+  aria-live="polite"
+  aria-label="Chat messages"
+>
+  <div class="welcome" id="welcome">
+    <div class="welcome-icon">✦</div>
+
+    <h2>Hello, I'm Nova AI</h2>
+
+    <p>
+      नमस्ते! मैं Nova AI हूँ।<br>
+      मुझसे पढ़ाई, coding, science या किसी भी सामान्य विषय के बारे में पूछो।
+    </p>
+
+    <div class="suggestions">
+      <button
+        type="button"
+        class="suggestion"
+        data-q="मुझे आसान भाषा में Machine Learning समझाओ।"
+      >
+        <span>🧠</span>
+        Machine Learning क्या है?
+      </button>
+
+      <button
+        type="button"
+        class="suggestion"
+        data-q="मुझे HTML और CSS सीखने का आसान तरीका बताओ।"
+      >
+        <span>💻</span>
+        Coding सीखें
+      </button>
+
+      <button
+        type="button"
+        class="suggestion"
+        data-q="मुझे भारत के बारे में 10 रोचक तथ्य बताओ।"
+      >
+        <span>🌍</span>
+        रोचक जानकारी
+      </button>
+
+      <button
+        type="button"
+        class="suggestion"
+        data-q="मेरे लिए Maths की पढ़ाई का एक आसान टाइमटेबल बनाओ।"
+      >
+        <span>📚</span>
+        Study Timetable
+      </button>
+    </div>
+  </div>
+</section>
+
+<div class="typing" id="typing" hidden>
+  <div class="avatar">✦</div>
+
+  <div class="dots" aria-label="Nova AI जवाब लिख रहा है">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <span>Nova AI जवाब तैयार कर रहा है...</span>
+</div>
+
+<section class="composer-area">
+  <form class="form" id="form">
+    <textarea
+      class="prompt"
+      id="prompt"
+      placeholder="Nova AI से कुछ भी पूछें..."
+      rows="1"
+      aria-label="अपना सवाल लिखें"
+      required
+    ></textarea>
+
+    <button
+      class="send"
+      id="send"
+      type="submit"
+      aria-label="Send message"
+    >
+      ↑
+    </button>
+  </form>
+
+  <p class="footer-note">
+    Nova AI गलतियाँ कर सकता है। ज़रूरी जानकारी को दूसरे भरोसेमंद स्रोत से भी जाँचें।
+  </p>
+</section>
+
+  </main>  <script>
+    /*
+      IMPORTANT:
+      नीचे PASTE_YOUR_WORKER_URL_HERE की जगह
+      अपने deployed Cloudflare Worker का असली URL डालें।
+    */
+
+    const API_URL = "PASTE_YOUR_WORKER_URL_HERE";
 
     const chat = document.getElementById("chat");
     const form = document.getElementById("form");
     const promptInput = document.getElementById("prompt");
     const sendButton = document.getElementById("send");
     const typing = document.getElementById("typing");
+    const newChatButton = document.getElementById("newChat");
 
     let history = [];
     let busy = false;
@@ -273,20 +557,79 @@
       const bubble = document.createElement("div");
       bubble.className = "bubble";
 
-      // Safe text rendering; user content is not interpreted as HTML.
-      bubble.textContent = text;
+      // textContent का उपयोग HTML को सुरक्षित रखने के लिए किया गया है।
+      bubble.textContent = String(text);
 
       row.append(avatar, bubble);
       chat.appendChild(row);
+
       chat.scrollTop = chat.scrollHeight;
     }
 
-    async function askAI(question) {
-      if (busy || !question.trim()) return;
+    function showWelcome() {
+      const welcome = document.createElement("div");
+      welcome.className = "welcome";
+      welcome.id = "welcome";
 
-      if (API_URL.includes("https://<worker-name>.anshnayak460.workers.dev")) {
+      const icon = document.createElement("div");
+      icon.className = "welcome-icon";
+      icon.textContent = "✦";
+
+      const heading = document.createElement("h2");
+      heading.textContent = "Hello, I'm Nova AI";
+
+      const description = document.createElement("p");
+      description.textContent =
+        "नमस्ते! मैं Nova AI हूँ। मुझसे पढ़ाई, coding, science या किसी भी सामान्य विषय के बारे में पूछो।";
+
+      const suggestions = document.createElement("div");
+      suggestions.className = "suggestions";
+
+      const prompts = [
+        ["🧠", "Machine Learning क्या है?", "मुझे आसान भाषा में Machine Learning समझाओ।"],
+        ["💻", "Coding सीखें", "मुझे HTML और CSS सीखने का आसान तरीका बताओ।"],
+        ["🌍", "रोचक जानकारी", "मुझे भारत के बारे में 10 रोचक तथ्य बताओ।"],
+        ["📚", "Study Timetable", "मेरे लिए Maths की पढ़ाई का एक आसान टाइमटेबल बनाओ।"]
+      ];
+
+      prompts.forEach(([iconText, title, question]) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "suggestion";
+        button.dataset.q = question;
+
+        const emoji = document.createElement("span");
+        emoji.textContent = iconText;
+
+        button.append(
+          emoji,
+          document.createTextNode(title)
+        );
+
+        suggestions.appendChild(button);
+      });
+
+      welcome.append(
+        icon,
+        heading,
+        description,
+        suggestions
+      );
+
+      chat.appendChild(welcome);
+    }
+
+    async function askAI(question) {
+      question = question.trim();
+
+      if (busy || !question) return;
+
+      if (
+        API_URL === "PASTE_YOUR_WORKER_URL_HERE" ||
+        !/^https:\/\/.+/.test(API_URL)
+      ) {
         addMessage(
-          "Pehle index.html mein API_URL ko apne deployed Cloudflare Worker URL se replace karo.",
+          "Configuration error: पहले अपना deployed Cloudflare Worker URL सेट करो। अभी AI सर्वर कनेक्ट नहीं है।",
           "assistant"
         );
         return;
@@ -295,86 +638,155 @@
       busy = true;
       sendButton.disabled = true;
       promptInput.disabled = true;
+      newChatButton.disabled = true;
 
       addMessage(question, "user");
       typing.hidden = false;
+      chat.scrollTop = chat.scrollHeight;
 
       const nextHistory = [
         ...history,
-        { role: "user", content: question }
+        {
+          role: "user",
+          content: question
+        }
       ].slice(-20);
 
       try {
         const response = await fetch(API_URL, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ messages: nextHistory })
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({
+            messages: nextHistory
+          })
         });
 
-        const data = await response.json();
+        const raw = await response.text();
 
-        if (!response.ok) {
-          throw new Error(data.error || "AI request failed.");
+        let data;
+
+        try {
+          data = JSON.parse(raw);
+        } catch {
+          throw new Error(
+            "Worker ने valid JSON नहीं भेजा। Backend response जाँचें।"
+          );
         }
 
-        if (typeof data.reply !== "string" || !data.reply.trim()) {
-          throw new Error("AI ka jawab nahi mila.");
+        if (!response.ok) {
+          throw new Error(
+            data.error ||
+            data.message ||
+            "Server error: " + response.status
+          );
+        }
+
+        if (
+          typeof data.reply !== "string" ||
+          !data.reply.trim()
+        ) {
+          throw new Error(
+            "AI का reply नहीं मिला। Worker को { reply: '...' } format में जवाब देना चाहिए।"
+          );
         }
 
         history = [
           ...nextHistory,
-          { role: "assistant", content: data.reply }
+          {
+            role: "assistant",
+            content: data.reply
+          }
         ].slice(-20);
 
         addMessage(data.reply, "assistant");
 
       } catch (error) {
+        console.error("Nova AI Error:", error);
+
+        let message = error.message;
+
+        if (error instanceof TypeError) {
+          message =
+            "सर्वर से connection नहीं हो पाया। Worker URL, internet और CORS settings जाँचें।";
+        }
+
         addMessage(
-          "AI se connect nahi ho paaya.\n" +
-          error.message +
-          "\n\nWorker URL, API key aur backend settings check karo.",
+          "Nova AI से जवाब नहीं मिला।\n\n" +
+          message +
+          "\n\nCloudflare Worker और API configuration जाँचें।",
           "assistant"
         );
+
       } finally {
         typing.hidden = true;
         busy = false;
+
         sendButton.disabled = false;
         promptInput.disabled = false;
+        newChatButton.disabled = false;
+
         promptInput.focus();
       }
     }
 
-    form.addEventListener("submit", (event) => {
+    form.addEventListener("submit", function(event) {
       event.preventDefault();
 
       const question = promptInput.value.trim();
+
       if (!question || busy) return;
 
       promptInput.value = "";
+      promptInput.style.height = "auto";
+
       askAI(question);
     });
 
-    document.querySelectorAll("[data-q]").forEach((button) => {
-      button.addEventListener("click", () => {
-        askAI(button.dataset.q);
-      });
+    // Enter से संदेश भेजें; Shift + Enter से नई लाइन बनाएँ।
+    promptInput.addEventListener("keydown", function(event) {
+      if (
+        event.key === "Enter" &&
+        !event.shiftKey &&
+        !event.isComposing
+      ) {
+        event.preventDefault();
+        form.requestSubmit();
+      }
     });
 
-    document.getElementById("newChat").addEventListener("click", () => {
+    // Text लिखने पर textarea की ऊँचाई बढ़ाएँ।
+    promptInput.addEventListener("input", function() {
+      promptInput.style.height = "auto";
+
+      promptInput.style.height =
+        Math.min(promptInput.scrollHeight, 150) + "px";
+    });
+
+    // Quick prompt buttons.
+    document.addEventListener("click", function(event) {
+      const button = event.target.closest("[data-q]");
+
+      if (!button || busy) return;
+
+      askAI(button.dataset.q);
+    });
+
+    // Start a fresh conversation.
+    newChatButton.addEventListener("click", function() {
       if (busy) return;
 
       history = [];
       chat.replaceChildren();
 
-      const welcome = document.createElement("div");
-      welcome.className = "welcome";
-      welcome.id = "welcome";
-      welcome.textContent =
-        "Nayi chat shuru ho gayi! Apna sawaal likho.";
+      showWelcome();
 
-      chat.appendChild(welcome);
+      promptInput.value = "";
+      promptInput.style.height = "auto";
       promptInput.focus();
     });
-  </script>
-</body>
-</html>
+  </script></body>
+  </html>
